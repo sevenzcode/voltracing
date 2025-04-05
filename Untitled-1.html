@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Dirt Bike Finder</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-4xl mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4">E-Dirt Bike Finder</h1>
+    <input id="search" type="text" placeholder="Search by brand or model..." class="w-full p-2 border rounded mb-4">
+
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <input id="minPrice" type="number" placeholder="Min Price" class="p-2 border rounded">
+      <input id="maxPrice" type="number" placeholder="Max Price" class="p-2 border rounded">
+      <input id="minSpeed" type="number" placeholder="Min Top Speed (mph)" class="p-2 border rounded">
+      <input id="minRange" type="number" placeholder="Min Range (mi)" class="p-2 border rounded">
+      <select id="sizeFilter" class="p-2 border rounded">
+        <option value="">All Sizes</option>
+        <option value="pitbike">Pitbike</option>
+        <option value="full size">Full Size</option>
+      </select>
+    </div>
+
+    <div id="bike-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+  </div>
+
+  <script>
+    const bikes = [
+      {
+        id: 1,
+        brand: 'SurRon',
+        model: 'Light Bee X',
+        topSpeed: 47,
+        price: 4600,
+        range: 30,
+        size: 'full size',
+        image: 'https://ecdwraps.com/cdn/shop/files/blue_bffc7a8f-aad5-4d4d-b0be-8534d085a938_1024x1024.jpg?v=1715185303',
+        link: 'https://lunacycle.com/surron-x-bike-black-edition/'
+      },
+      {
+        id: 2,
+        brand: 'SurRon',
+        model: 'Hyper Bee',
+        topSpeed: 32,
+        price: 2999,
+        range: 25,
+        size: 'pitbike',
+        image: 'https://cdn.shopify.com/s/files/1/0540/6644/6508/files/hyperbeeblue.png?v=1736532675',
+        link: ''
+      },
+      {
+        id: 3,
+        brand: 'SurRon',
+        model: 'Ultra Bee',
+        topSpeed: 59,
+        price: 6499,
+        range: 50,
+        size: 'full size',
+        image: 'https://www.blownmotor.com/cdn/shop/files/0.png?v=1721776435&width=1080',
+        link: ''
+      },
+      {
+        id: 4,
+        brand: 'SurRon',
+        model: 'Storm Bee',
+        topSpeed: 69,
+        price: 8999,
+        range: 65,
+        size: 'full size',
+        image: 'https://mxracecutz.com/cdn/shop/files/Product-Image_3aa7dad5-037b-425b-8bb6-a2b4bd4b1e4e.png?v=1688842181',
+        link: ''
+      },
+      {
+        id: 5,
+        brand: 'Talaria',
+        model: 'XXX',
+        topSpeed: 55,
+        price: 3150,
+        range: 30,
+        size: 'full size',
+        image: 'https://cdn11.bigcommerce.com/s-9vkjq73s/images/stencil/2048x2048/products/2342/16925/TALARIA_XXX_BLUE_-_WHITEOUT_copy__43797.1735945672.jpg?c=2',
+        link: ''
+      },
+      {
+        id: 6,
+        brand: 'Talaria',
+        model: 'MX4',
+        topSpeed: 53,
+        price: 3650,
+        range: 35,
+        size: 'full size',
+        image: 'https://cdn11.bigcommerce.com/s-9vkjq73s/images/stencil/2048x2048/products/2264/14664/TALARIA_WHITEOUT_copy__98524.1680340334.png?c=2',
+        link: ''
+      },
+      {
+        id: 7,
+        brand: 'Talaria',
+        model: 'MX5',
+        topSpeed: 59,
+        price: 4700,
+        range: 40,
+        size: 'full size',
+        image: 'https://cdn11.bigcommerce.com/s-9vkjq73s/products/2677/images/16622/MX5_03_WHITEOUT__62588.1725101281.500.750.png?c=2',
+        link: ''
+      },
+      {
+        id: 8,
+        brand: 'E Ride Pro',
+        model: 'S',
+        topSpeed: 50,
+        price: 3600,
+        range: 40,
+        size: 'full size',
+        image: 'https://leucadiabikes.com/cdn/shop/files/Screenshot_2024-04-15_at_4.01.17_PM_bdade3f1-747d-498c-a799-070158c5258f.png?v=1713228765&width=1920',
+        link: ''
+      },
+      {
+        id: 9,
+        brand: 'E Ride Pro',
+        model: 'SS 2.0',
+        topSpeed: 60,
+        price: 4500,
+        range: 45,
+        size: 'full size',
+        image: 'https://highvoltagepev.com/cdn/shop/files/lime.png?v=1718649007&width=533',
+        link: ''
+      },
+      {
+        id: 10,
+        brand: 'E Ride Pro',
+        model: 'SS 3.0',
+        topSpeed: 60,
+        price: 5100,
+        range: 50,
+        size: 'full size',
+        image: 'https://ecdwraps.com/cdn/shop/files/Mint_8734f498-ac99-4d46-8895-84eeb29a7e0f_1024x1024.jpg?v=1737488751',
+        link: ''
+      },
+      {
+        id: 11,
+        brand: 'E Ride Pro',
+        model: 'Mini',
+        topSpeed: 47,
+        price: 3100,
+        range: 30,
+        size: 'pitbike',
+        image: 'https://static.wixstatic.com/media/b48777_5968500dd2e44545afe72647755fc0ef~mv2.jpg/v1/fill/w_764,h_514,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%E7%99%BD%E5%BA%95%E5%9B%BE.jpg',
+        link: ''
+      },
+      {
+        id: 12,
+        brand: 'Rawrr',
+        model: 'Mantis Mini',
+        topSpeed: 30,
+        price: 2500,
+        range: 20,
+        size: 'pitbike',
+        image: 'https://revrides.com/cdn/shop/files/MantisMiniWhite-05_2048x2048_588ad3fb-3d8e-46e5-82e9-bde597d5ef29.webp?v=1721347121&width=1946',
+        link: ''
+      },
+      {
+        id: 13,
+        brand: 'Rawrr',
+        model: 'Mantis Mini R',
+        topSpeed: 46,
+        price: 2500,
+        range: 30,
+        size: 'pitbike',
+        image: 'https://rawrrmantis.com/cdn/shop/files/Mantis_Mini_R_black.png?v=1741681233&width=1080holder.com/400x240?text=SurRon+Light+Bee+X',
+        link: ''
+      },
+      {
+        id: 14,
+        brand: 'Rawrr',
+        model: 'Mantis X',
+        topSpeed: 50,
+        price: 3000,
+        range: 30,
+        size: 'full size',
+        image: 'https://i.ibb.co/6c8dLs75/IMG-4790-removebg-preview.png',
+        link: ''
+      },
+      {
+        id: 16,
+        brand: 'Rawrr',
+        model: 'Mantis',
+        topSpeed: 54,
+        price: 4500,
+        range: 50,
+        size: 'full size',
+        image: 'https://ampedbikes.com/cdn/shop/files/Rawrr72Mantis_front_angle_1485x.jpg?v=1718219995',
+        link: ''
+      },
+      {
+        id: 17,
+        brand: '79Bike',
+        model: 'Falcon Pro',
+        topSpeed: 56,
+        price: 4000,
+        range: 50,
+        size: 'full size',
+        image: 'https://79bike.com/cdn/shop/files/DSC00023.jpg?v=1729247187',
+        link: ''
+      },
+      {
+        id: 18,
+        brand: 'Ventus',
+        model: 'One Plus',
+        topSpeed: 81,
+        price: 5850,
+        range: 60,
+        size: 'full size',
+        image: 'https://www.watt-wheels.com/cdn/shop/files/VentusOne.png?v=1716560274',
+        link: ''
+      },
+      {
+        id: 19,
+        brand: 'Stark',
+        model: 'Varg',
+        topSpeed: 80,
+        price: 11000,
+        range: 90,
+        size: 'full size',
+        image: 'https://wmr1.com/cdn/shop/products/stark-varg-electric-bike-forest-grey.jpg?v=1639603107&width=1080',
+        link: ''
+      },
+      {
+        id: 20,
+        brand: 'Tuttio',
+        model: 'Soleli01',
+        topSpeed: 37,
+        price: 1300,
+        range: 15,
+        size: 'pitbike',
+        image: 'https://tuttiosport.com/cdn/shop/files/electric-dirt-bike-for-adults-pit-bike.jpg?v=1735746565',
+        link: ''
+      },
+      {
+        id: 21,
+        brand: 'Ridstar',
+        model: 'Q20',
+        topSpeed: 30,
+        price: 1000,
+        range: 20,
+        size: 'full sized',
+        image: 'https://ridstar.com/cdn/shop/files/ridstar_q20-2_66d85138-25ad-4afd-bd63-067790369051.png?v=1734073181&width=800',
+        link: ''
+      },
+      {
+        id: 22,
+        brand: 'Razor',
+        model: 'MX650',
+        topSpeed: 17,
+        price: 700,
+        range: 10,
+        size: 'pitbike',
+        image: 'https://razor.com/wp-content/uploads/2018/01/mx650_ye_product.png',
+        link: ''
+      },
+      {
+        id: 23,
+        brand: 'Razor',
+        model: 'MX650 (modded)',
+        topSpeed: 45,
+        price: 1500,
+        range: 25,
+        size: 'pitbike',
+        image: 'https://www.customscooters.com/cdn/shop/products/Razor_Yellow_MX650_Action.jpg?v=1571268713',
+        link: ''
+      },
+      {
+        id: 24,
+        brand: 'Super73',
+        model: 'Z Miami Core',
+        topSpeed: 20,
+        price: 1995,
+        range: 20,
+        size: 'full size',
+        image: 'https://super73.com/cdn/shop/files/SUPER73_MY24_ZMIAMI_Core_PanthroBlue_RearHero_92a6df44-ff83-4888-962a-505130701f92_1466x.jpg?v=1724187775',
+        link: ''
+      },
+      {
+        id: 25,
+        brand: 'Super73',
+        model: 'S2 SE',
+        topSpeed: 20,
+        price: 2995,
+        range: 35,
+        size: 'full size',
+        image: 'https://boostedusa.com/cdn/shop/files/24YM_S2_SE_PANTHEROBLUE_RIGHT_2200x.jpg?v=1715371266',
+        link: ''
+      },
+      {
+        id: 26,
+        brand: 'Super73',
+        model: 'R Adventure',
+        topSpeed: 20,
+        price: 3695,
+        range: 40,
+        size: 'full size',
+        image: 'https://super73.com/cdn/shop/files/SUPER73_MY24_RAdventure_LE_Speedway_FrontHero_7b000ac6-ab6e-4fe7-ad7b-56c781357c25.jpg?v=1722564885',
+        link: ''
+      },
+      {
+        id: 27,
+        brand: 'E Ride Pro',
+        model: 'SR',
+        topSpeed: 70,
+        price: 5700,
+        range: 50,
+        size: 'full size',
+        image: 'https://static.wixstatic.com/media/827dc9_f9ebcbd2c286435491a9b9c1d93ca0d7~mv2.png/v1/crop/x_343,y_192,w_1902,h_1387/fill/w_764,h_514,fp_0.50_0.50,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_3584.png',
+        link: ''
+      },
+      {
+        id: 28,
+        brand: 'Altis',
+        model: 'Sigma',
+        topSpeed: 70,
+        price: 5500,
+        range: 40,
+        size: 'full size',
+        image: 'https://revrides.com/cdn/shop/files/Untitleddesign_6.png?v=1726884311',
+        link: ''
+      },
+    ];
+
+    const bikeList = document.getElementById('bike-list');
+    const searchInput = document.getElementById('search');
+    const minPrice = document.getElementById('minPrice');
+    const maxPrice = document.getElementById('maxPrice');
+    const minSpeed = document.getElementById('minSpeed');
+    const minRange = document.getElementById('minRange');
+    const sizeFilter = document.getElementById('sizeFilter');
+
+    function renderBikes(filteredBikes) {
+      bikeList.innerHTML = '';
+      filteredBikes.forEach(bike => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl shadow overflow-hidden';
+
+        card.innerHTML = `
+          <img src="${bike.image}" alt="${bike.model}" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h2 class="text-xl font-semibold">${bike.brand} ${bike.model}</h2>
+            <p class="text-sm text-gray-600">Top Speed: ${bike.topSpeed || '?'} mph</p>
+            <p class="text-sm text-gray-600">Range: ${bike.range || '?'} mi</p>
+            <p class="text-sm text-gray-600">Price: $${bike.price.toLocaleString()}</p>
+            <p class="text-sm text-gray-600">Size: ${bike.size}</p>
+            <a href="${bike.link || '#'}" target="_blank">
+              <button class="mt-2 w-full bg-blue-600 text-white py-1 rounded hover:bg-blue-700">View Details</button>
+            </a>
+          </div>
+        `;
+        bikeList.appendChild(card);
+      });
+    }
+
+    function applyFilters() {
+      const query = searchInput.value.toLowerCase();
+      const minP = parseInt(minPrice.value) || 0;
+      const maxP = parseInt(maxPrice.value) || Infinity;
+      const minS = parseInt(minSpeed.value) || 0;
+      const minR = parseInt(minRange.value) || 0;
+      const size = sizeFilter.value;
+
+      const filtered = bikes.filter(bike => {
+        return (
+          (bike.brand.toLowerCase().includes(query) || bike.model.toLowerCase().includes(query)) &&
+          bike.price >= minP &&
+          bike.price <= maxP &&
+          bike.topSpeed >= minS &&
+          bike.range >= minR &&
+          (size === '' || bike.size === size)
+        );
+      });
+
+      renderBikes(filtered);
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    minPrice.addEventListener('input', applyFilters);
+    maxPrice.addEventListener('input', applyFilters);
+    minSpeed.addEventListener('input', applyFilters);
+    minRange.addEventListener('input', applyFilters);
+    sizeFilter.addEventListener('change', applyFilters);
+
+    renderBikes(bikes);
+  </script>
+
+</body>
+</html>
